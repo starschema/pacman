@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>HTML5 Pacman</title>
     
+    <link href="bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
       @font-face {
 	    font-family: 'BDCartoonShoutRegular';
@@ -37,11 +38,41 @@
   <a href="http://arandomurl.com/">Writeup</a> |
   Code on <a href="http://arandomurl.com/">Github</a>
 
-  <div id="pacman"></div>
+  <div id="userNameModal" class="modal fade">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4>Please enter your name</h4>
+              </div>
+              <div class="modal-body">
+                  <label for="username">Username:</label>
+                  <input type="text" name="username" id="username" autofocus="true"></input>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div id="pacman" contenteditable="true"></div>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="bootstrap.min.js"></script>
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
+  <script src="../highscore-client/static/index.js"></script>
 
   <script>
+
+    $('#username').on('keypress', function(e) {
+        if (e.keyCode === 13) {
+            $('#userNameModal').modal('hide');
+        }
+    });
+    $('#userNameModal').on('shown.bs.modal', function(e) {
+        $('#username').focus();
+    });
 
     var el = document.getElementById("pacman");
 

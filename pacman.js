@@ -21,6 +21,8 @@ var NONE        = 4,
     DYING       = 10,
     Pacman      = {};
 
+var HIGHSCORE_URL = "http://highscore.starschema.net"
+
 Pacman.FPS = 30;
 
 Pacman.Ghost = function (game, map, colour) {
@@ -285,6 +287,8 @@ Pacman.User = function (game, map) {
         lives     = null,
         score     = 5,
         keyMap    = {};
+
+    window.Highscore.init(HIGHSCORE_URL);
     
     keyMap[KEY.ARROW_LEFT]  = LEFT;
     keyMap[KEY.ARROW_UP]    = UP;
@@ -293,6 +297,7 @@ Pacman.User = function (game, map) {
 
     function addScore(nScore) { 
         score += nScore;
+        window.Highscore.eventHappened('score', score);
         if (score >= 10000 && score - nScore < 10000) { 
             lives += 1;
         }
@@ -334,7 +339,11 @@ Pacman.User = function (game, map) {
     
     function keyDown(e) {
         if (typeof keyMap[e.keyCode] !== "undefined") { 
+            var oldDue = due;
             due = keyMap[e.keyCode];
+            if (oldDue !== due) {
+                window.Highscore.eventHappened('turn');
+            }
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -387,7 +396,6 @@ Pacman.User = function (game, map) {
     };
 
     function move(ctx) {
-        
         var npos        = null, 
             nextWhole   = null, 
             oldPosition = position,
@@ -587,7 +595,7 @@ Pacman.Map = function (size) {
     }
     
     function reset() {       
-        map    = Pacman.MAP.clone();
+        map = clone(Pacman.MAP);
         height = map.length;
         width  = map[0].length;        
     };
@@ -789,6 +797,8 @@ var PACMAN = (function () {
         user         = null,
         stored       = null;
 
+    $('#userNameModal').on('hidden.bs.modal', startNewGame); 
+
     function getTick() { 
         return tick;
     };
@@ -829,12 +839,15 @@ var PACMAN = (function () {
         user.reset();
         map.reset();
         map.draw(ctx);
+        var username = $('#username')[0].value;
+        $('#pacman').focus();
+        window.Highscore.startGame('pacman', username);
         startLevel();
     }
 
     function keyDown(e) {
         if (e.keyCode === KEY.N) {
-            startNewGame();
+            $('#userNameModal').modal();
         } else if (e.keyCode === KEY.S) {
             audio.disableSound();
             localStorage["soundDisabled"] = !soundDisabled();
@@ -936,6 +949,7 @@ var PACMAN = (function () {
         for (i = 0, len = ghosts.length; i < len; i += 1) {
             if (collided(userPos, ghostPos[i]["new"])) {
                 if (ghosts[i].isVunerable()) { 
+                    window.Highscore.eventHappened('eat_ghost');
                     audio.play("eatghost");
                     ghosts[i].eat();
                     eatenCount += 1;
@@ -1016,6 +1030,7 @@ var PACMAN = (function () {
         setState(WAITING);
         level += 1;
         map.reset();
+        window.Highscore.eventHappened('levelup');
         user.newLevel();
         startLevel();
     };
@@ -1083,8 +1098,9 @@ var PACMAN = (function () {
 
         dialog("Press N to Start");
         
-        document.addEventListener("keydown", keyDown, true);
-        document.addEventListener("keypress", keyPress, true); 
+        $('#pacman').bind('keydown', keyDown);
+        $('#pacman').bind('keypress', keyPress);
+        $('#pacman').focus();
         
         timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
@@ -1253,16 +1269,16 @@ Pacman.WALLS = [
      {"line": [10.5, 9.5]}]
 ];
 
-Object.prototype.clone = function () {
-    var i, newObj = (this instanceof Array) ? [] : {};
-    for (i in this) {
+clone = function(source) {
+    var i, newObj = (source instanceof Array) ? [] : {};
+    for (i in source) {
         if (i === 'clone') {
             continue;
         }
-        if (this[i] && typeof this[i] === "object") {
-            newObj[i] = this[i].clone();
+        if (source[i] && typeof source[i] === "object") {
+            newObj[i] = clone(source[i]);
         } else {
-            newObj[i] = this[i];
+            newObj[i] = source[i];
         }
     }
     return newObj;
