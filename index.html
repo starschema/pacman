@@ -33,10 +33,7 @@
   
   <div id="shim">shim for font face</div>
 
-  <h1>HTML5 Pacman</h1>
-
-  <a href="http://arandomurl.com/">Writeup</a> |
-  Code on <a href="http://arandomurl.com/">Github</a>
+  <h1>#Data15 Tableau</h1>
 
   <div id="userNameModal" class="modal fade">
       <div class="modal-dialog">
@@ -84,6 +81,31 @@
         "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
     }
   </script>
+
+  <div id="tableauViz"></div>
+
+  <script type="text/javascript" src="http://public.tableau.com/javascripts/api/tableau-2.0.1.min.js"></script>
+
+<script>
+function initializeViz() {
+  var placeholderDiv = document.getElementById("tableauViz");
+  var url = "http://54.203.245.18/views/Cnake/Snake";
+  var options = {
+    width: 600,
+    height: 600,
+    hideTabs: true,
+    hideToolbar: true,
+    onFirstInteractive: function () {
+      workbook = viz.getWorkbook();
+      activeSheet = workbook.getActiveSheet();
+    }
+  };
+  viz = new tableau.Viz(placeholderDiv, url, options);
+}    
+
+$(initializeViz);
+
+</script> 
 
 </body>
 </html>
