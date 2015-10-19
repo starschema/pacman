@@ -841,7 +841,11 @@ var PACMAN = (function () {
         map.draw(ctx);
         var username = $('#username')[0].value;
         $('#pacman').focus();
-        window.Highscore.startGame('pacman', username);
+        window.Highscore.startGame('pacman', username, function(err, gameId) {
+            if (err === null) {
+                workbook.changeParameterValueAsync("Game ID", gameId);
+            }
+        });
         startLevel();
     }
 
