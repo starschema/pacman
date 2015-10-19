@@ -58,7 +58,7 @@
   <script src="bootstrap.min.js"></script>
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
-  <script src="../highscore-client/static/index.js"></script>
+  <script src="https://rawgit.com/starschema/highscore-client/master/static/index.js"></script>
 
   <script>
 
@@ -89,7 +89,7 @@
 <script>
 function initializeViz() {
   var placeholderDiv = document.getElementById("tableauViz");
-  var url = "http://54.203.245.18/views/Cnake/Snake";
+  var url = "http://54.203.245.18/views/Cnake/Snake?Game%20Type%20Param=pacman";
   var options = {
     width: 600,
     height: 600,
@@ -98,12 +98,20 @@ function initializeViz() {
     onFirstInteractive: function () {
       workbook = viz.getWorkbook();
       activeSheet = workbook.getActiveSheet();
+	var vizUpdater = setInterval(myTimer, 10000);
+
+	function myTimer() {
+		workbook.changeParameterValueAsync( "Game ID", Highscore.gameId());
+		viz.refreshDataAsync();
+	}
     }
   };
   viz = new tableau.Viz(placeholderDiv, url, options);
 }    
 
 $(initializeViz);
+
+
 
 </script> 
 

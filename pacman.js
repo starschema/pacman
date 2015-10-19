@@ -1,4 +1,4 @@
-/*jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true */
+﻿/*jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true */
 /*global window: false, document: false */
 
 /*
@@ -317,7 +317,7 @@ Pacman.User = function (game, map) {
 
     function initUser() {
         score = 0;
-        lives = 3;
+        lives = 1;
         newLevel();
     }
     
