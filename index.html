@@ -5,6 +5,7 @@
     <title>HTML5 Pacman</title>
 
     <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <style type="text/css">
         @font-face {
             font-family: 'BDCartoonShoutRegular';
@@ -14,29 +15,28 @@
         }
 
         #title-bar {
-            margin: 0px 100px;
-        }
-
-        #title-bar * {
-            display: inline-block;
-        }
-
-        #title-bar img {
-            margin-bottom: 16px;
-        }
-
-        #title {
-            margin: 15px 150px;
+            height: 80px;
+            padding: 20px 0px;
         }
 
         #pacman {
             height: 450px;
             width: 342px;
-            margin: 75px 149px;
+            float: left;
         }
 
         #tableauViz {
-            margin: 0px 20px;
+            border-radius: 15px;
+            border: 1px white solid;
+            padding: 5px;
+            background-color: white;
+            float: right;
+        }
+
+        #plane {
+            width: 100px;
+            height: 100px;
+            float: left;
         }
 
         #shim {
@@ -45,14 +45,49 @@
             visibility: hidden
         }
 
-        h1 {
-            font-family: BDCartoonShoutRegular;
-        }
-
         body {
             font-family: sans-serif;
-            width: 1280px;
             margin: 0px auto;
+            width: 1280px;
+            height: 720px;
+        }
+
+        #content {
+            background-image: url("images/bg.png");
+            background-size: 100%;
+            width: 100%;
+            height: 100%;
+            padding: 60px 105px;
+        }
+
+        #title {
+            float:left;
+            margin-left: 250px;
+            font-size: 30px;
+            font-family:  Montserrat, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            height: 40px;
+        }
+        #title-first {
+            color: #3fa9f5;
+        }
+        #title-second {
+            color: #083f82;
+            float:right;
+            margin-right: 355px;
+        }
+
+        #virtdb {
+            float: left;
+        }
+        #starschema {
+            float: right;
+        }
+
+        #pacman canvas {
+            border-radius: 10px;
+            border: 1px black solid;
         }
 
         a {
@@ -67,91 +102,94 @@
 <div id="shim">shim for font face</div>
 
 <div id="title-bar">
-    <img height="40" src="http://www.virtdb.com/images/virtdb_logobig.png" >
-    <h1 id="title">#Data15 Tableau</h1>
-    <img height="40" src="http://static.starschema.net/wp-content/uploads/2013/11/17112515/logo_v-300x122.png" >
+    <img id="virtdb" height="40" src="http://www.virtdb.com/images/virtdb_logobig.png">
+    <div id="title">
+        <span id="title-first">#Data15</span>
+        <span id="title-second">Tableau</span>
+    </div>
+    <img id="starschema" height="40" src="http://static.starschema.net/wp-content/uploads/2013/11/17112515/logo_v-300x122.png">
 </div>
-
-<div id="userNameModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Please enter your name</h4>
-            </div>
-            <div class="modal-body">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" autofocus="true"></input>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+<div id="content">
+    <div id="userNameModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Please enter your name</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" id="username" autofocus="true"></input>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="pull-left" id="pacman" contenteditable="true"></div>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="bootstrap.min.js"></script>
-<script src="pacman.js"></script>
-<script src="modernizr-1.5.min.js"></script>
-<script src="https://rawgit.com/starschema/highscore-client/master/static/index.js"></script>
+    <div id="pacman" contenteditable="true"></div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap.min.js"></script>
+    <script src="pacman.js"></script>
+    <script src="modernizr-1.5.min.js"></script>
+    <script src="https://rawgit.com/starschema/highscore-client/master/static/index.js"></script>
 
-<script>
+    <script>
 
-    $('#username').on('keypress', function (e) {
-        if (e.keyCode === 13) {
-            $('#userNameModal').modal('hide');
-        }
-    });
-    $('#userNameModal').on('shown.bs.modal', function (e) {
-        $('#username').focus();
-    });
-
-    var el = document.getElementById("pacman");
-
-    if (Modernizr.canvas && Modernizr.localstorage &&
-            Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
-        window.setTimeout(function () {
-            PACMAN.init(el, "./");
-        }, 0);
-    } else {
-        el.innerHTML = "Sorry, needs a decent browser<br /><small>" +
-                "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
-    }
-</script>
-
-<div class="pull-right" id="tableauViz"></div>
-
-<script type="text/javascript" src="http://public.tableau.com/javascripts/api/tableau-2.0.1.min.js"></script>
-
-<script>
-    function initializeViz() {
-        var placeholderDiv = document.getElementById("tableauViz");
-		var url = "http://54.203.245.18/views/Cnake/Snake?Game%20Type%20Param=pacman&:display_spinner=no&:display_overlay=false";
-        var options = {
-            width: 600,
-            height: 600,
-            hideTabs: true,
-            hideToolbar: true,
-            onFirstInteractive: function () {
-                workbook = viz.getWorkbook();
-                activeSheet = workbook.getActiveSheet();
-                var vizUpdater = setInterval(myTimer, 10000);
-
-                function myTimer() {
-                    workbook.changeParameterValueAsync("Game ID", Highscore.gameId());
-                    viz.refreshDataAsync();
-                }
+        $('#username').on('keypress', function (e) {
+            if (e.keyCode === 13) {
+                $('#userNameModal').modal('hide');
             }
-        };
-        viz = new tableau.Viz(placeholderDiv, url, options);
-    }
+        });
+        $('#userNameModal').on('shown.bs.modal', function (e) {
+            $('#username').focus();
+        });
 
-    $(initializeViz);
+        var el = document.getElementById("pacman");
+
+        if (Modernizr.canvas && Modernizr.localstorage &&
+                Modernizr.audio && (Modernizr.audio.ogg || Modernizr.audio.mp3)) {
+            window.setTimeout(function () {
+                PACMAN.init(el, "./");
+            }, 0);
+        } else {
+            el.innerHTML = "Sorry, needs a decent browser<br /><small>" +
+                    "(firefox 3.6+, Chrome 4+, Opera 10+ and Safari 4+)</small>";
+        }
+    </script>
+
+    <div id="tableauViz"></div>
+    <img id="plane" src="images/paperplane.png" />
+    <script type="text/javascript" src="http://public.tableau.com/javascripts/api/tableau-2.0.1.min.js"></script>
+
+    <script>
+        function initializeViz() {
+            var placeholderDiv = document.getElementById("tableauViz");
+            var url = "http://54.203.245.18/views/Cnake/Snake?Game%20Type%20Param=pacman&:display_spinner=no&:display_overlay=false";
+            var options = {
+                width: 600,
+                height: 600,
+                hideTabs: true,
+                hideToolbar: true,
+                onFirstInteractive: function () {
+                    workbook = viz.getWorkbook();
+                    activeSheet = workbook.getActiveSheet();
+                    var vizUpdater = setInterval(myTimer, 10000);
+
+                    function myTimer() {
+                        workbook.changeParameterValueAsync("Game ID", Highscore.gameId());
+                        viz.refreshDataAsync();
+                    }
+                }
+            };
+            viz = new tableau.Viz(placeholderDiv, url, options);
+        }
+
+        $(initializeViz);
 
 
-</script>
-
+    </script>
+</div>
 </body>
 </html>
