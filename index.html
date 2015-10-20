@@ -137,7 +137,7 @@
             onFirstInteractive: function () {
                 workbook = viz.getWorkbook();
                 activeSheet = workbook.getActiveSheet();
-                var vizUpdater = setInterval(myTimer, 10000);
+                var vizUpdater = setInterval(myTimer, 5000);
 
                 function myTimer() {
                     workbook.changeParameterValueAsync("Game ID", Highscore.gameId());
